@@ -1,0 +1,8 @@
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\bin\Debug\7-home-work.exe.config
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\bin\Debug\7-home-work.exe
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\bin\Debug\7-home-work.pdb
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\obj\Debug\7-home-work.csproj.AssemblyReference.cache
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\obj\Debug\7-home-work.csproj.SuggestedBindingRedirects.cache
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\obj\Debug\7-home-work.csproj.CoreCompileInputs.cache
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\obj\Debug\7-home-work.exe
+C:\Users\Кирилл\source\repos\7-home-work\7-home-work\obj\Debug\7-home-work.pdb
