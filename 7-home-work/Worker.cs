@@ -43,15 +43,15 @@ namespace _7_home_work
         /// </summary>
         public string PlaceOfBirth { get; set; }
 
-        public Worker(int ID, DateTime DateTime, string FIO, int Age, int Height, DateTime DateOfBirth, string PlaceOfBirth)
-        {
-            this.ID = ID;
-            this.DateTime = DateTime;
-            this.FIO = FIO;
-            this.Age = Age;
-            this.Height = Height;
-            this.DateOfBirth = DateOfBirth;
-            this.PlaceOfBirth = PlaceOfBirth;
-        }
+        //public Worker(int ID, DateTime DateTime, string FIO, int Age, int Height, DateTime DateOfBirth, string PlaceOfBirth)
+        //{
+        //    this.ID = ID;
+        //    this.DateTime = DateTime;
+        //    this.FIO = FIO;
+        //    this.Age = Age;
+        //    this.Height = Height;
+        //    this.DateOfBirth = DateOfBirth;
+        //    this.PlaceOfBirth = PlaceOfBirth;
+        //}
     }
 }

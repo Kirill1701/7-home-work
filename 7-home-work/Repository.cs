@@ -12,90 +12,112 @@ using System.Threading;
 using Microsoft.Office.Interop.Excel;
 using System.Globalization;
 using System.Net.NetworkInformation;
+using System.Diagnostics;
 
 namespace _7_home_work
 {
     public class Repository
     {
+        // Просмотр записей сотрудников
         public Worker[] GetAllWorkers() 
         {
+            Worker[] workers = new Worker[7];
             Reading();
-            return GetAllWorkers();
+            Console.WriteLine("\nEnter - возврат в главное меню.");
+            Console.ReadKey();
+            return workers;
         }
 
+        // Поиск сотрудника по ID
         public Worker GetWorkerById(int id)
         {
+            Worker worker = new Worker();
             Search();
-            return GetWorkerById(id);
+            Console.WriteLine("\nEnter - возврат в главное меню.");
+            Console.ReadKey();
+            return worker;
         }
 
+        // Удаление сотрудника по ID
         public void DeleteWorker(int id)
         {
             Delete();
+            Console.WriteLine("\nEnter - возврат в главное меню.");
+            Console.ReadKey();
         }
 
+        // Добавление нового сотрудника
         public void AddWorker(Worker worker)
         {
             Note();
+            Console.WriteLine("\nEnter - возврат в главное меню.");
+            Console.ReadKey();
         }
 
         public Worker[] GetWorkersBetweenTwoDates(DateTime dateFrom, DateTime dateTo)
         {
-            Worker worker = new Worker();
-
-            string[] workers = File.ReadAllLines("staff.csv", Encoding.Unicode);
+            Worker[] workers = new Worker[7];
 
             Console.Write($"Введите дату начала поиска: ");
-            DateTime input1 = Convert.ToDateTime(Console.ReadLine());
-            dateFrom = input1;
+            dateFrom = Convert.ToDateTime(Console.ReadLine());
 
             Console.Write($"Введите конечную дату для поиска: ");
-            DateTime input2 = Convert.ToDateTime(Console.ReadLine());
-            dateTo = input2;
+            dateTo = Convert.ToDateTime(Console.ReadLine());
 
-            foreach (string line in workers)
+            var sortedWorkers = workers.OrderBy(w => w.DateTime);
+
+            foreach (var line in sortedWorkers)
             {
-                if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
+                if (line.Equals(dateFrom))
                     Console.WriteLine(line);
             }
-
-            //using (StreamReader openFile = new StreamReader("staff.csv", Encoding.Unicode))
-            //{
-            //    string line;
-
-            
-
-
-            //    if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
-            //    {
-            //        while ((line = openFile.ReadLine()) != null)
-            //        {
-            //            string[] staff = line.Split('\t');
-            //            Console.WriteLine($"{staff[0],8} {staff[1],15}  {staff[2],35}" +
-            //                $" {staff[3],4} {staff[4],5} {staff[5],15} {staff[6],25}");
-            //        }
-            //    }
-            //}
-            //string[] workersArray = File.ReadAllLines("staff.csv", Encoding.Unicode);
-
-            
-
-            //workersArray.OrderByDescending(x => x).Take(workersArray.Length);
-            //workersArray.ToList();
-            //Console.WriteLine(workersArray.ToString());
-
-            //foreach (string line in workersArray)
-            //{
-            //    if (line.Contains(dateFrom.ToString()))
-            //        Console.WriteLine(line);
-                
-            //}
-
-            //if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
-            //    Console.WriteLine(line);
-            //(worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
             Console.ReadKey();
-            return GetWorkersBetweenTwoDates(dateFrom, dateTo);
+            //Worker worker = new Worker();
+
+            //string[] workers = File.ReadAllLines("staff.csv", Encoding.Unicode);
+            //foreach (string line in workers)
+            //{
+            //    if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
+            //        Console.WriteLine(line);
+            //}
+
+            ////using (StreamReader openFile = new StreamReader("staff.csv", Encoding.Unicode))
+            ////{
+            ////    string line;
+
+            
+
+
+            ////    if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
+            ////    {
+            ////        while ((line = openFile.ReadLine()) != null)
+            ////        {
+            ////            string[] staff = line.Split('\t');
+            ////            Console.WriteLine($"{staff[0],8} {staff[1],15}  {staff[2],35}" +
+            ////                $" {staff[3],4} {staff[4],5} {staff[5],15} {staff[6],25}");
+            ////        }
+            ////    }
+            ////}
+            ////string[] workersArray = File.ReadAllLines("staff.csv", Encoding.Unicode);
+
+            
+
+            ////workersArray.OrderByDescending(x => x).Take(workersArray.Length);
+            ////workersArray.ToList();
+            ////Console.WriteLine(workersArray.ToString());
+
+            ////foreach (string line in workersArray)
+            ////{
+            ////    if (line.Contains(dateFrom.ToString()))
+            ////        Console.WriteLine(line);
+                
+            ////}
+
+            ////if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
+            ////    Console.WriteLine(line);
+            ////(worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
+            //Console.ReadKey();
+            return workers;
         }
 
         // Метод для заполнения данных
@@ -109,12 +131,13 @@ namespace _7_home_work
 
                 do
                 {
+                    // Инициализация
                     Worker worker = new Worker();
                     // Объявление переменной с пустой строкой
                     string guide = string.Empty;
 
                     // Наполнение строк данными
-                    Console.Write($"\nВведите ID сотрудника: ");
+                    Console.Write($"\nВведите ID сотрудника (6 цифр): ");
                     worker.ID = Convert.ToInt32(Console.ReadLine());
                     guide += $"{worker.ID}\t";
 
@@ -134,7 +157,7 @@ namespace _7_home_work
                     worker.Height = Convert.ToInt32(Console.ReadLine());
                     guide += $"{worker.Height}\t";
                     
-                    Console.Write("Введите дату рождения сотрудника: ");
+                    Console.Write("Введите дату рождения сотрудника (дд.мм.гггг): ");
                     worker.DateOfBirth = DateTime.Parse(Console.ReadLine());
                     guide += $"{worker.DateOfBirth.ToShortDateString()}\t";
 
@@ -145,7 +168,7 @@ namespace _7_home_work
                     file.WriteLine(guide);
 
                     // Продолжить или прекратить работу
-                    Console.Write("Продолжить н/д"); key = Console.ReadKey(true).KeyChar;
+                    Console.Write("\nПродолжить н/д"); key = Console.ReadKey(true).KeyChar;
                 }
                 while (char.ToLower(key) == 'д'); // Считывание ключа, если 'д', то повторение цикла
             }
@@ -161,11 +184,11 @@ namespace _7_home_work
                 {
                     string line;
 
-                    while ((line = openFile.ReadLine()) != null) // Возможно попробовать if, чтобы цикл не повторялся. Массив вынести за цикл
+                    while ((line = openFile.ReadLine()) != null) 
                     {
-                        string[] staff = line.Split('\t');
-                        Console.WriteLine($"{staff[0],8} {staff[1],15}  {staff[2],35}" +
-                            $" {staff[3],4} {staff[4],5} {staff[5],15} {staff[6],25}");
+                        string[] workers = line.Split('\t');
+                        Console.WriteLine($"{workers[0],8} {workers[1],15}  {workers[2],35}" +
+                            $" {workers[3],4} {workers[4],5} {workers[5],15} {workers[6],25}");
                     }
                 }
             }
@@ -173,7 +196,6 @@ namespace _7_home_work
             {
                 Note();
             }
-            Console.ReadKey();
         }
 
         // Метод для поиска сотрудника
@@ -188,13 +210,12 @@ namespace _7_home_work
                 Console.Write("\nВведите ID сотрудника для поиска: ");
                 int id = Convert.ToInt32(Console.ReadLine());
 
-                // Объявление массива строк, чтение файла
-                string[] lines = File.ReadAllLines("staff.csv", Encoding.Unicode);
+                string[] workers = File.ReadAllLines("staff.csv", Encoding.Unicode);
 
                 // Показать найденного сотрудника
-                foreach (string line in lines)
+                foreach (string line in workers)
                     if (line.Contains(id.ToString()))
-                        Console.WriteLine(line);
+                        Console.WriteLine($"\n{line}");
 
                 // Продолжить или прекратить работу
                 Console.Write("Продолжить н/д"); key1 = Console.ReadKey(true).KeyChar;
@@ -229,14 +250,12 @@ namespace _7_home_work
                 Console.Write("\nВведите ID сотрудника для удаления: ");
                 int id = Convert.ToInt32(Console.ReadLine());
 
-                // Объявление массива строк, чтение файла
-                string[] lines = File.ReadAllLines("staff.csv", Encoding.Unicode);
+                string[] workers = File.ReadAllLines("staff.csv", Encoding.Unicode);
 
-                // Переменная для подсчета количества итераций цикла
                 int value = 0;
 
                 // Показать найденного сотрудника
-                foreach (string line in lines)
+                foreach (string line in workers)
                 {
                     value++;
                     if (line.Contains(id.ToString()))
@@ -250,10 +269,10 @@ namespace _7_home_work
                 int index = value - 1;
 
                 // Применение метода для удаления элемента массива
-                RemoveAt(ref lines, index);
+                RemoveAt(ref workers, index);
 
                 // Сохранить изменения в файле
-                File.WriteAllLines("staff.csv", lines, Encoding.Unicode);
+                File.WriteAllLines("staff.csv", workers, Encoding.Unicode);
                 Console.WriteLine("\nЗапись о сотруднике удалена.");
 
                 // Продолжить или прекратить работу

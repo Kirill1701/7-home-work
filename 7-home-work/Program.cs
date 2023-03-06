@@ -13,22 +13,24 @@ namespace _7_home_work
 {
     internal class Program
     {
-        // Метод входа в программу
-        static void Point()
+        // Главное меню программы
+        public static void Point()
         {
-            Console.Write("Для работы с данными сотрудников выберите действие: " +
+            Console.Write("\nДля работы с данными сотрудников выберите действие: " +
                 "\n1. Просмотр записей сотрудников;" +
                 "\n2. Поиск сотрудника по ID;" +
                 "\n3. Добавление нового сотрудника;" +
                 "\n4. Удаление сотрудника по ID;" +
-                "\n5. Сортировка по дате добавления сотрудников." +
+                "\n5. Сортировка по дате добавления сотрудников;" +
                 "\n6. Выйти из программы." +
                 "\n");
+            Console.WriteLine(new string('-', 50));
         }
 
+        // Метод выполнения действий пользователя
         static void Cycle()
         {
-            int input = Convert.ToInt32(Console.ReadLine()); // Выбор пользователя
+            var input = Console.ReadLine(); // Выбор пользователя
 
             Repository repository = new Repository(); 
 
@@ -36,36 +38,36 @@ namespace _7_home_work
 
             int id = 0;
 
-            var dateFrom = new DateTime();
-            var dateTo = new DateTime();
+            DateTime dateFrom = DateTime.MinValue;
+            DateTime dateTo = DateTime.MaxValue;
 
-            if (input == 1)
+            if (input == "1")
             {
-                repository.GetAllWorkers(); // Постоянно открывается список, надо вернуться в главное менюю для выполнения дальнейших действий
+                repository.GetAllWorkers(); // Просмотр записей сотрудников
             }
-            else if (input == 2)
+            else if (input == "2")
             {
-                repository.GetWorkerById(id); // Поиск не прекращается при нажатии 'н' поиск продолжается. Надо вернуться для выполнения дальнейших действий
+                repository.GetWorkerById(id); // Поиск сотрудника по ID
             }
-            else if (input == 3)
+            else if (input == "3")
             {
-                repository.AddWorker(worker); // Добавление происходит. При нажатии 'н' программа вылетает. Надо вернуться для дальнейших действий
+                repository.AddWorker(worker); // Добавление нового сотрудника
             }
-            else if (input == 4)
+            else if (input == "4")
             {
-                repository.DeleteWorker(id); // Удаление происходит. При нажатии 'н' программа вылетает. Надо вернуться для дальнейших действий
+                repository.DeleteWorker(id); // Удаление сотрудника по ID
             }
-            else if (input == 5)
+            else if (input == "5")
             {
-                repository.GetWorkersBetweenTwoDates(dateFrom, dateTo);
+                repository.GetWorkersBetweenTwoDates(dateFrom, dateTo); // Сортировка по дате добавления сотрудников
             }
-            else if (input == 6)
+            else if (input == "6")
             {
-                Environment.Exit(0);
+                Environment.Exit(0); // Выход из программы
             }
             else
             {
-                Console.WriteLine("\nНекорректное действие. Повторите ввод"); // Вроде решил проблему, else работает. При бесконечном неправильном вводе, программа повторяется
+                Console.WriteLine("\nНекорректное действие. Повторите ввод");
                 Point();
                 Cycle();
             }
@@ -74,9 +76,10 @@ namespace _7_home_work
         static void Main(string[] args)
         {
             // Точка входа в программу
+            Again:
             Point();
             Cycle();
-            Console.ReadKey();
+            goto Again;
         }
     }
 }
