@@ -1,18 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Runtime.Remoting.Messaging;
-using System.Net;
-using System.Security.Permissions;
-using System.Security.Cryptography.X509Certificates;
-using System.Threading;
-using Microsoft.Office.Interop.Excel;
-using System.Globalization;
-using System.Net.NetworkInformation;
-using System.Diagnostics;
 
 namespace _7_home_work
 {
@@ -58,65 +48,19 @@ namespace _7_home_work
         {
             Worker[] workers = new Worker[7];
 
+            //List<Worker> result = new List<Worker>();
+
+            Worker worker = new Worker();
+
             Console.Write($"Введите дату начала поиска: ");
             dateFrom = Convert.ToDateTime(Console.ReadLine());
 
             Console.Write($"Введите конечную дату для поиска: ");
             dateTo = Convert.ToDateTime(Console.ReadLine());
 
-            var sortedWorkers = workers.OrderBy(w => w.DateTime);
+            string[] sortedWorkers = File.ReadAllLines("staff.csv", Encoding.Unicode);
 
-            foreach (var line in sortedWorkers)
-            {
-                if (line.Equals(dateFrom))
-                    Console.WriteLine(line);
-            }
             Console.ReadKey();
-            //Worker worker = new Worker();
-
-            //string[] workers = File.ReadAllLines("staff.csv", Encoding.Unicode);
-            //foreach (string line in workers)
-            //{
-            //    if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
-            //        Console.WriteLine(line);
-            //}
-
-            ////using (StreamReader openFile = new StreamReader("staff.csv", Encoding.Unicode))
-            ////{
-            ////    string line;
-
-            
-
-
-            ////    if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
-            ////    {
-            ////        while ((line = openFile.ReadLine()) != null)
-            ////        {
-            ////            string[] staff = line.Split('\t');
-            ////            Console.WriteLine($"{staff[0],8} {staff[1],15}  {staff[2],35}" +
-            ////                $" {staff[3],4} {staff[4],5} {staff[5],15} {staff[6],25}");
-            ////        }
-            ////    }
-            ////}
-            ////string[] workersArray = File.ReadAllLines("staff.csv", Encoding.Unicode);
-
-            
-
-            ////workersArray.OrderByDescending(x => x).Take(workersArray.Length);
-            ////workersArray.ToList();
-            ////Console.WriteLine(workersArray.ToString());
-
-            ////foreach (string line in workersArray)
-            ////{
-            ////    if (line.Contains(dateFrom.ToString()))
-            ////        Console.WriteLine(line);
-                
-            ////}
-
-            ////if (worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
-            ////    Console.WriteLine(line);
-            ////(worker.DateTime >= dateFrom && worker.DateTime <= dateTo)
-            //Console.ReadKey();
             return workers;
         }
 
@@ -133,6 +77,7 @@ namespace _7_home_work
                 {
                     // Инициализация
                     Worker worker = new Worker();
+
                     // Объявление переменной с пустой строкой
                     string guide = string.Empty;
 
@@ -280,5 +225,18 @@ namespace _7_home_work
             }
             while (char.ToLower(key) == 'д'); // Считывание ключа, если 'д', то повторение цикла
         }
+
+        //static void SortDate(ref DateTime[] dates, DateTime dateFrom, DateTime dateTo)
+        //{
+        //    List<DateTime> result = new List<DateTime>();
+
+        //    foreach (var data in dates)
+        //    {
+        //        if (data >= dateFrom && data <= dateTo)
+        //            result.Add(data);
+        //    }
+
+        //    dates = result.ToArray();
+        //}
     }
 }
