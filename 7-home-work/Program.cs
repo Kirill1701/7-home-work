@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -8,73 +9,53 @@ namespace _7_home_work
 {
     internal class Program
     {
-        // Главное меню программы
-        public static void Point()
+        static void Main(string[] args)
         {
-            Console.Write("\nДля работы с данными сотрудников выберите действие: " +
-                "\n1. Просмотр записей сотрудников;" +
+            // Инициализация
+            Repository repository = new Repository();
+            Worker worker = new Worker();
+            DateTime dateFrom = new DateTime();
+            DateTime dateTo = new DateTime();
+
+            int id = 0;
+            char key = 'н';
+
+            // Основное окно программы
+            do 
+            {
+                Console.Write("\nДля работы с данными сотрудников выберите действие: " +
+                "\n1. Просмотр сотрудников;" +
                 "\n2. Поиск сотрудника по ID;" +
                 "\n3. Добавление нового сотрудника;" +
                 "\n4. Удаление сотрудника по ID;" +
                 "\n5. Сортировка по дате добавления сотрудников;" +
-                "\n6. Выйти из программы." +
+                "\n6. Выход из программы" +
                 "\n");
-            Console.WriteLine(new string('-', 50));
-        }
+                Console.WriteLine(new string('-', 50));
 
-        // Метод выполнения действий пользователя
-        static void Cycle()
-        {
-            var input = Console.ReadLine(); // Выбор пользователя
+                // Чтение действия
+                string input = Console.ReadLine();
 
-            Repository repository = new Repository(); 
-
-            Worker worker = new Worker();
-
-            int id = 0;
-
-            DateTime dateFrom = DateTime.MinValue;
-            DateTime dateTo = DateTime.MaxValue;
-
-            if (input == "1")
-            {
-                repository.GetAllWorkers(); // Просмотр записей сотрудников
+                // Выполнение действия
+                if (input == "1")
+                    repository.GetAllWorkers(); 
+                else if (input == "2")
+                    repository.GetWorkerById(id); 
+                else if (input == "3")
+                    repository.AddWorker(worker); 
+                else if (input == "4")
+                    repository.DeleteWorker(id); 
+                else if (input == "5")
+                    repository.GetWorkersBetweenTwoDates(dateFrom, dateTo);
+                else if (input == "6")
+                {
+                    Console.Write("\nВы хотите завершить работу? н/д" +
+                    "\n"); key = Console.ReadKey(true).KeyChar;
+                }
+                else
+                    Console.WriteLine("\nНекорректное действие. Повторите ввод");
             }
-            else if (input == "2")
-            {
-                repository.GetWorkerById(id); // Поиск сотрудника по ID
-            }
-            else if (input == "3")
-            {
-                repository.AddWorker(worker); // Добавление нового сотрудника
-            }
-            else if (input == "4")
-            {
-                repository.DeleteWorker(id); // Удаление сотрудника по ID
-            }
-            else if (input == "5")
-            {
-                repository.GetWorkersBetweenTwoDates(dateFrom, dateTo); // Сортировка по дате добавления сотрудников
-            }
-            else if (input == "6")
-            {
-                Environment.Exit(0); // Выход из программы
-            }
-            else
-            {
-                Console.WriteLine("\nНекорректное действие. Повторите ввод");
-                Point();
-                Cycle();
-            }
-        }
-
-        static void Main(string[] args)
-        {
-            // Точка входа в программу
-            Again:
-            Point();
-            Cycle();
-            goto Again;
+            while (char.ToLower(key) == 'н');
         }
     }
 }

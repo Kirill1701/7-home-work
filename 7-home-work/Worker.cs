@@ -11,15 +11,15 @@ namespace _7_home_work
         /// <summary>
         /// ID сотрудника
         /// </summary>
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Дата и время добавления записи
         /// </summary>
-        public DateTime DateTime { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         /// <summary>
-        /// Фамилия, имя, отчество сотрудника
+        /// ФИО сотрудника
         /// </summary>
         public string FIO { get; set; }
 
@@ -29,7 +29,7 @@ namespace _7_home_work
         public int Age { get; set; }
 
         /// <summary>
-        /// Рост сотрудника
+        /// рост сотрудника
         /// </summary>
         public int Height { get; set; }
 
@@ -42,16 +42,5 @@ namespace _7_home_work
         /// Место рождения сотрудника
         /// </summary>
         public string PlaceOfBirth { get; set; }
-
-        //public Worker(int ID, DateTime DateTime, string FIO, int Age, int Height, DateTime DateOfBirth, string PlaceOfBirth)
-        //{
-        //    this.ID = ID;
-        //    this.DateTime = DateTime;
-        //    this.FIO = FIO;
-        //    this.Age = Age;
-        //    this.Height = Height;
-        //    this.DateOfBirth = DateOfBirth;
-        //    this.PlaceOfBirth = PlaceOfBirth;
-        //}
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Hangfire.Server;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,235 +9,213 @@ namespace _7_home_work
 {
     public class Repository
     {
-        // Просмотр записей сотрудников
+        string file = "workers.csv";
+        Worker[] workers;
+        char key = 'д';
+
+        /// <summary>
+        /// Проверка наличия файла. Создание, если его не существует
+        /// </summary>
+        public Repository() 
+        {
+            if (!File.Exists(file))
+                File.Create(file).Close();
+            LoadData();
+        }
+
+        /// <summary>
+        /// Чтение списка сотрудников
+        /// </summary>
+        /// <returns></returns>
         public Worker[] GetAllWorkers() 
         {
-            Worker[] workers = new Worker[7];
-            Reading();
-            Console.WriteLine("\nEnter - возврат в главное меню.");
-            Console.ReadKey();
+            if (workers.Length == 0) 
+                Console.WriteLine("Список сотрудников пуст");
+            foreach (var worker in workers)
+                Reading(worker);
             return workers;
         }
 
-        // Поиск сотрудника по ID
+        /// <summary>
+        /// Поиск сотрудника по ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Worker GetWorkerById(int id)
         {
-            Worker worker = new Worker();
+            Worker worker = workers[id];
             Search();
-            Console.WriteLine("\nEnter - возврат в главное меню.");
-            Console.ReadKey();
             return worker;
         }
 
-        // Удаление сотрудника по ID
-        public void DeleteWorker(int id)
+        /// <summary>
+        /// Удаление сотрудника по ID
+        /// </summary>
+        /// <param name="id"></param>
+        public void DeleteWorker(int id) 
         {
-            Delete();
-            Console.WriteLine("\nEnter - возврат в главное меню.");
-            Console.ReadKey();
-        }
-
-        // Добавление нового сотрудника
-        public void AddWorker(Worker worker)
-        {
-            Note();
-            Console.WriteLine("\nEnter - возврат в главное меню.");
-            Console.ReadKey();
-        }
-
-        public Worker[] GetWorkersBetweenTwoDates(DateTime dateFrom, DateTime dateTo)
-        {
-            Worker[] workers = new Worker[7];
-
-            //List<Worker> result = new List<Worker>();
-
-            Worker worker = new Worker();
-
-            Console.Write($"Введите дату начала поиска: ");
-            dateFrom = Convert.ToDateTime(Console.ReadLine());
-
-            Console.Write($"Введите конечную дату для поиска: ");
-            dateTo = Convert.ToDateTime(Console.ReadLine());
-
-            string[] sortedWorkers = File.ReadAllLines("staff.csv", Encoding.Unicode);
-
-            Console.ReadKey();
-            return workers;
-        }
-
-        // Метод для заполнения данных
-        static void Note()
-        {
-            // Создание файла
-            using (StreamWriter file = new StreamWriter("staff.csv", true, Encoding.Unicode))
-            {
-                // Ключ для продолжения, либо прекращения работы
-                char key = 'д';
-
-                do
-                {
-                    // Инициализация
-                    Worker worker = new Worker();
-
-                    // Объявление переменной с пустой строкой
-                    string guide = string.Empty;
-
-                    // Наполнение строк данными
-                    Console.Write($"\nВведите ID сотрудника (6 цифр): ");
-                    worker.ID = Convert.ToInt32(Console.ReadLine());
-                    guide += $"{worker.ID}\t";
-
-                    worker.DateTime = DateTime.Now; 
-                    Console.WriteLine($"Дата и время добавления записи: {worker.DateTime}");
-                    guide += $"{worker.DateTime}\t";
-
-                    Console.Write("Введите Ф.И.О. сотрудника: ");
-                    worker.FIO = Console.ReadLine();
-                    guide += $"{worker.FIO}\t";
-
-                    Console.Write("Введите возраст сотрудника: ");
-                    worker.Age = Convert.ToInt32(Console.ReadLine());
-                    guide += $"{worker.Age}\t";
-
-                    Console.Write("Введите рост сотрудника: ");
-                    worker.Height = Convert.ToInt32(Console.ReadLine());
-                    guide += $"{worker.Height}\t";
-                    
-                    Console.Write("Введите дату рождения сотрудника (дд.мм.гггг): ");
-                    worker.DateOfBirth = DateTime.Parse(Console.ReadLine());
-                    guide += $"{worker.DateOfBirth.ToShortDateString()}\t";
-
-                    Console.Write("Введите место рождения сотрудника: ");
-                    worker.PlaceOfBirth = Console.ReadLine();
-                    guide += $"{worker.PlaceOfBirth}\t";
-
-                    file.WriteLine(guide);
-
-                    // Продолжить или прекратить работу
-                    Console.Write("\nПродолжить н/д"); key = Console.ReadKey(true).KeyChar;
-                }
-                while (char.ToLower(key) == 'д'); // Считывание ключа, если 'д', то повторение цикла
-            }
-        }
-
-        // Метод для чтения файла
-        static void Reading()
-        {
-            try 
-            {
-                // Чтение файла
-                using (StreamReader openFile = new StreamReader("staff.csv", Encoding.Unicode))
-                {
-                    string line;
-
-                    while ((line = openFile.ReadLine()) != null) 
-                    {
-                        string[] workers = line.Split('\t');
-                        Console.WriteLine($"{workers[0],8} {workers[1],15}  {workers[2],35}" +
-                            $" {workers[3],4} {workers[4],5} {workers[5],15} {workers[6],25}");
-                    }
-                }
-            }
-            catch // Создание нового файла, при его отсутствии. Выполнение метода Note
-            {
-                Note();
-            }
-        }
-
-        // Метод для поиска сотрудника
-        static void Search()
-        {
-            // Ключ для продолжения поиска
-            char key1 = 'д';
-
-            // Поиск по введенным данным
-            do
-            {
-                Console.Write("\nВведите ID сотрудника для поиска: ");
-                int id = Convert.ToInt32(Console.ReadLine());
-
-                string[] workers = File.ReadAllLines("staff.csv", Encoding.Unicode);
-
-                // Показать найденного сотрудника
-                foreach (string line in workers)
-                    if (line.Contains(id.ToString()))
-                        Console.WriteLine($"\n{line}");
-
-                // Продолжить или прекратить работу
-                Console.Write("Продолжить н/д"); key1 = Console.ReadKey(true).KeyChar;
-            }
-            while (char.ToLower(key1) == 'д'); // Считывание ключа, если 'д', то повторение цикла
-        }
-
-        // Метод удаления элемента массива по найденному индексу
-        static void RemoveAt(ref string[] lines, int index)
-        {
-            // Создание нового массива данных для записи результата
-            string[] newLines = new string[lines.Length - 1];
-
-            // Извлечение элемента массива, копирование, перезапись массива -1 элемент 
-            for (int i = 0; i < index; i++)
-                newLines[i] = lines[i];
-
-            for (int i = index + 1; i < lines.Length; i++)
-                newLines[i - 1] = lines[i];
-
-            // Присвоение старому массиву нового массива
-            lines = newLines;
-        }
-
-        // Метод для удаления сотрудника по ID
-        static void Delete()
-        {
-            char key = 'д';
-
             do
             {
                 Console.Write("\nВведите ID сотрудника для удаления: ");
-                int id = Convert.ToInt32(Console.ReadLine());
+                id = Convert.ToInt32(Console.ReadLine());
 
-                string[] workers = File.ReadAllLines("staff.csv", Encoding.Unicode);
+                var worker = workers.FirstOrDefault(w => w.Id == id);
 
-                int value = 0;
-
-                // Показать найденного сотрудника
-                foreach (string line in workers)
-                {
-                    value++;
-                    if (line.Contains(id.ToString()))
-                    {
-                        Console.WriteLine($"\n{line}");
-                        break;
-                    }
-                }
+                if (worker.Id != 0)
+                    Reading(worker);
+                else
+                    Console.WriteLine("\nРаботника не существует");
 
                 // Индекс полученного элемента массива
-                int index = value - 1;
+                int index = workers.ToList().IndexOf(worker);
 
                 // Применение метода для удаления элемента массива
                 RemoveAt(ref workers, index);
 
                 // Сохранить изменения в файле
-                File.WriteAllLines("staff.csv", workers, Encoding.Unicode);
+                SaveData();
                 Console.WriteLine("\nЗапись о сотруднике удалена.");
 
                 // Продолжить или прекратить работу
                 Console.Write("\nПродолжить н/д"); key = Console.ReadKey(true).KeyChar;
             }
-            while (char.ToLower(key) == 'д'); // Считывание ключа, если 'д', то повторение цикла
+            while (char.ToLower(key) == 'д');
         }
 
-        //static void SortDate(ref DateTime[] dates, DateTime dateFrom, DateTime dateTo)
-        //{
-        //    List<DateTime> result = new List<DateTime>();
+        /// <summary>
+        /// Добавление сотрудника
+        /// </summary>
+        /// <param name="worker"></param>
+        public void AddWorker(Worker worker)
+        {
+            do
+            {
+                Console.Write("\nВведите фамилию, имя, отчество сотрудника: ");
+                string fio = Console.ReadLine();
 
-        //    foreach (var data in dates)
-        //    {
-        //        if (data >= dateFrom && data <= dateTo)
-        //            result.Add(data);
-        //    }
+                Console.Write("Введите возраст сотрудника: ");
+                int age = int.Parse(Console.ReadLine());
 
-        //    dates = result.ToArray();
-        //}
+                Console.Write("Введите рост сотрудника: ");
+                int height = int.Parse(Console.ReadLine());
+
+                Console.Write("Введите дату рождения сотрудника (dd.MM.yyyy): ");
+                DateTime dateOfBirth = DateTime.ParseExact(Console.ReadLine(), "dd.MM.yyyy", null);
+
+                Console.Write("Введите место рождения сотрудника: ");
+                string placeOfBirth = Console.ReadLine();
+
+                var newWorker = new Worker
+                {
+                    Id = workers.Length + 1,
+                    CreatedAt = DateTime.Now,
+                    FIO = fio,
+                    Age = age,
+                    Height = height,
+                    DateOfBirth = dateOfBirth,
+                    PlaceOfBirth = placeOfBirth
+                };
+
+                workers = workers.Append(newWorker).ToArray();
+
+                SaveData();
+
+                Console.WriteLine("\nНовый сотрудник: ");
+                Reading(newWorker);
+
+                Console.Write("\nПродолжить д/н"); key = Console.ReadKey(true).KeyChar;
+            }
+            while (char.ToLower(key) == 'д');
+        }
+
+        /// <summary>
+        /// Сортировка по дате добавления
+        /// </summary>
+        /// <param name="dateFrom"></param>
+        /// <param name="dateTo"></param>
+        /// <returns></returns>
+        public Worker[] GetWorkersBetweenTwoDates(DateTime dateFrom, DateTime dateTo)
+        {
+            Console.Write("Введите дату начала поиска (dd.MM.yyyy): ");
+            dateFrom = DateTime.ParseExact(Console.ReadLine(), "dd.MM.yyyy", null);
+
+            Console.Write("Введите конечную дату поиска (dd.MM.yyyy): ");
+            dateTo = DateTime.ParseExact(Console.ReadLine(), "dd.MM.yyyy", null);
+
+
+            var sortedWorkers = workers.Where(w => w.CreatedAt >= dateFrom && w.CreatedAt <= dateTo);
+
+            foreach (var worker in sortedWorkers)
+                Reading(worker);
+            return workers;
+        }
+        
+        // Конструктор 
+        void LoadData() 
+        {
+            workers = File.ReadAllLines(file)
+                .Select(line => line.Split('#'))
+                .Select(data => new Worker
+                {
+                    Id = int.Parse(data[0]),
+                    CreatedAt = DateTime.ParseExact(data[1], "dd.MM.yyyy HH:mm:ss", null),
+                    FIO = data[2],
+                    Age = int.Parse(data[3]),
+                    Height = int.Parse(data[4]),
+                    DateOfBirth = DateTime.ParseExact(data[5], "dd.MM.yyyy", null),
+                    PlaceOfBirth = data[6]
+                })
+                .ToArray();
+        }
+
+        // Метод для сохранения изменений в файле
+        void SaveData()
+        {
+            var lines = workers.Select(worker => $"{worker.Id}#{worker.CreatedAt:dd.MM.yyyy HH:mm:ss}#" +
+            $"{worker.FIO}#{worker.Age}#{worker.Height}#{worker.DateOfBirth:dd.MM.yyyy}#{worker.PlaceOfBirth}");
+
+            File.WriteAllLines(file, lines, Encoding.Unicode);
+        }
+
+        // Метод для чтения файла
+        void Reading(Worker worker)
+        {
+            Console.WriteLine($"{worker.Id} {worker.CreatedAt} {worker.FIO} {worker.Age} {worker.Height} " +
+                $"{worker.DateOfBirth.ToShortDateString()} {worker.PlaceOfBirth}");
+        }
+
+        // Метод для удаления элемента массива
+        void RemoveAt(ref Worker[] workers, int index)
+        {
+            // Создание нового массива данных для записи результата
+            Worker[] newWorkers = new Worker[workers.Length - 1];
+
+            // Извлечение элемента массива, копирование, перезапись массива -1 элемент 
+            for (int i = 0; i < index; i++)
+                newWorkers[i] = workers[i];
+
+            for (int i = index + 1; i < workers.Length; i++)
+                newWorkers[i - 1] = workers[i];
+
+            // Присвоение старому массиву нового массива
+            workers = newWorkers;
+        }
+
+        // Метод для поиска по ID
+        void Search()
+        {
+            do
+            {
+                Console.Write("\nВведите ID сотрудника для поиска: ");
+                int id = Convert.ToInt32(Console.ReadLine());
+                var worker = workers.FirstOrDefault(w => w.Id == id);
+                if (worker.Id != 0)
+                    Reading(worker);
+                else
+                    Console.WriteLine("\nРаботника не существует");
+                Console.Write("\nПродолжить поиск н/д"); key = Console.ReadKey(true).KeyChar;
+            }
+            while (char.ToLower(key) == 'д');
+        }
     }
 }
